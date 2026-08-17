@@ -10,16 +10,13 @@ difference between the two.
 ## Install
 
 ```bash
-pip install effect-reconciliation
-```
-
-No runtime dependencies. Or straight from the repository, no release required:
-
-```bash
 pip install "git+https://github.com/flxk1/effect-reconciliation"
 ```
 
-Tests: `pip install ".[test]"` from a clone.
+No runtime dependencies.
+
+Distributed from this repository; there is no package-index release. Tests:
+`pip install ".[test]"` from a clone.
 
 ## Usage
 

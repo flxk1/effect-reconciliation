@@ -177,5 +177,15 @@ class TestWindowing(unittest.TestCase):
         self.assertEqual(first, second)
 
 
+class TestPackaging(unittest.TestCase):
+    def test_version_matches_packaging(self):
+        """__version__ and pyproject drifted apart once: the package was tagged and
+        released as 0.2.0 while reporting 0.1.0 to anyone who installed it."""
+        import re, pathlib, effect_reconciliation
+        toml = (pathlib.Path(__file__).resolve().parents[1] / "pyproject.toml").read_text()
+        declared = re.search(r'^version = "([^"]+)"', toml, re.M).group(1)
+        self.assertEqual(effect_reconciliation.__version__, declared)
+
+
 if __name__ == "__main__":
     unittest.main()
