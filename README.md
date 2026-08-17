@@ -73,6 +73,12 @@ means every observed effect passed the enforcement point in that window.
   guarantee exactly-once is not misbehaving by saying so.
 - **Only permissions are inputs.** Refusals are not passed in. An effect matching a refused act
   appears as `observed_not_authorised`.
+- **An effect is a side effect that occurred, not an attempt.** This decides the answer. Request
+  logs record attempts including refused ones — a 403 response happened, the side effect it
+  refused did not. Feed refused attempts in and every denial reads as `observed_not_authorised`:
+  the enforcement point looks bypassed exactly when it is working, and real bypasses are buried.
+  See `examples/opa_decision_logs.py`, where the same data reads 0.50 or 0.33 depending only on
+  this.
 - **No verdict on conduct.** There is no breach or severity field. Three of the four classes have
   ordinary explanations.
 - No clock and no I/O; `since` / `until` are explicit and the window is half-open.
@@ -86,6 +92,19 @@ means every observed effect passed the enforcement point in that window.
 - Widening `match_window_s` buys matches and spends certainty. `binding_rate` reports the trade; it
   does not choose it.
 - Disagreement is not misconduct.
+
+## Consuming logs that are not ours
+
+`examples/opa_decision_logs.py` reconciles **Open Policy Agent decision logs** against an HTTP
+access log — two documented, widely deployed formats, neither designed for this package. The join
+key is `trace_id` (W3C trace-context), which OPA emits and a real deployment propagates, giving
+`BOUND` matches; without it, matching falls back to `INFERRED` within a window and `binding_rate`
+reports how much rests on inference.
+
+Both formats mapped with no change to the package. What the run did expose is the attempt-versus-
+effect distinction above: the same inputs yield `unauthorised_rate` 0.50 or 0.33, and only the
+lower one isolates the actual finding — a request that reached the world with no decision behind
+it at all.
 
 ## Prior art
 

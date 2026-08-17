@@ -90,7 +90,14 @@ class Authorisation:
 
 @dataclass(frozen=True)
 class Effect:
-    """One thing that actually happened.
+    """One governed side effect that actually occurred.
+
+    **Not an attempt.** The distinction decides the answer. A request log records
+    attempts, including refused ones: a 403 response *happened*, but the side
+    effect it was refused did not. Feed refused attempts in as effects and every
+    denial reads as OBSERVED_NOT_AUTHORISED — the enforcement point looks
+    catastrophically bypassed precisely when it is working, and the genuine
+    bypasses are buried in the noise. Filter to effects that occurred.
 
     ``authorisation_id`` is the binding an executor propagates when it can. Its
     absence is not an error; it downgrades the match to INFERRED and is counted
