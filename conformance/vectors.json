@@ -1,0 +1,294 @@
+{
+  "schema": "effect-reconciliation-conformance/1",
+  "package_version": "0.2.0",
+  "note": "Language-agnostic conformance vectors. Window defaults to 2026-03-01T00:00:00Z..2026-03-02T00:00:00Z unless the vector overrides it. The refusals \u2014 unreconciled on a single ledger, inferred-is-not-proven, duplicates counted rather than failed \u2014 are the point: they are what a reimplementation gets wrong.",
+  "window": {
+    "since": "2026-03-01T00:00:00Z",
+    "until": "2026-03-02T00:00:00Z"
+  },
+  "vectors": [
+    {
+      "id": "bound-match-reconciles",
+      "note": "an effect carrying the authorisation id is proof, not inference",
+      "authorisations": [
+        {
+          "id": "a1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        }
+      ],
+      "effects": [
+        {
+          "id": "e1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z",
+          "authorisation_id": "a1"
+        }
+      ],
+      "options": {},
+      "expect": {
+        "status": "reconciled",
+        "binding_rate": 1.0,
+        "unauthorised_rate": 0.0
+      }
+    },
+    {
+      "id": "unbound-outside-window-does-not-match",
+      "note": "exact-instant matching by default; no window, no guess",
+      "authorisations": [
+        {
+          "id": "a1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        }
+      ],
+      "effects": [
+        {
+          "id": "e1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:30Z"
+        }
+      ],
+      "options": {},
+      "expect": {
+        "status": "diverged"
+      }
+    },
+    {
+      "id": "unbound-inside-window-is-inferred",
+      "note": "widening the window buys matches and spends certainty; binding_rate reports the exchange",
+      "authorisations": [
+        {
+          "id": "a1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        }
+      ],
+      "effects": [
+        {
+          "id": "e1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:30Z"
+        }
+      ],
+      "options": {
+        "match_window_s": 60
+      },
+      "expect": {
+        "status": "reconciled",
+        "binding_rate": 0.0
+      }
+    },
+    {
+      "id": "authorised-not-observed-is-not-a-defect",
+      "note": "permission granted and unused is ordinary \u2014 the agent may simply not have acted",
+      "authorisations": [
+        {
+          "id": "a1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        }
+      ],
+      "effects": [],
+      "options": {},
+      "expect": {
+        "status": "reconciled",
+        "authorised_not_observed": 1
+      }
+    },
+    {
+      "id": "observed-not-authorised-diverges",
+      "note": "an effect with no permission behind it: mediation coverage measured, not asserted",
+      "authorisations": [],
+      "effects": [
+        {
+          "id": "e1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        }
+      ],
+      "options": {},
+      "expect": {
+        "status": "diverged",
+        "observed_not_authorised": 1,
+        "unauthorised_rate": 1.0
+      }
+    },
+    {
+      "id": "duplicates-counted-never-failed",
+      "note": "at-least-once delivery is a stated trade-off, not misbehaviour",
+      "authorisations": [
+        {
+          "id": "a1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        }
+      ],
+      "effects": [
+        {
+          "id": "e1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z",
+          "authorisation_id": "a1"
+        },
+        {
+          "id": "e2",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z",
+          "authorisation_id": "a1"
+        }
+      ],
+      "options": {},
+      "expect": {
+        "status": "diverged",
+        "duplicated": 1,
+        "matched": 1
+      }
+    },
+    {
+      "id": "no-observation-is-unreconciled",
+      "note": "effects=null means nobody looked; a report from one ledger is not a reconciliation",
+      "authorisations": [
+        {
+          "id": "a1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        }
+      ],
+      "effects": null,
+      "options": {},
+      "expect": {
+        "status": "unreconciled"
+      }
+    },
+    {
+      "id": "observed-nothing-differs-from-not-observed",
+      "note": "an empty list means observed and nothing happened \u2014 not the same claim",
+      "authorisations": [
+        {
+          "id": "a1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        }
+      ],
+      "effects": [],
+      "options": {},
+      "expect": {
+        "status": "reconciled"
+      }
+    },
+    {
+      "id": "unauthorised-rate-denominator-is-effects-seen",
+      "note": "a duplicate's first effect is already matched; counting the whole tuple again understates the rate",
+      "authorisations": [
+        {
+          "id": "a1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        }
+      ],
+      "effects": [
+        {
+          "id": "e1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z",
+          "authorisation_id": "a1"
+        },
+        {
+          "id": "e2",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z",
+          "authorisation_id": "a1"
+        },
+        {
+          "id": "e3",
+          "action": "other",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        }
+      ],
+      "options": {},
+      "expect": {
+        "unauthorised_rate": 0.3333333333333333
+      }
+    },
+    {
+      "id": "inverted-window-is-unreconciled",
+      "note": "a window that ends before it starts answers nothing",
+      "authorisations": [
+        {
+          "id": "a1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        }
+      ],
+      "effects": [
+        {
+          "id": "e1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z",
+          "authorisation_id": "a1"
+        }
+      ],
+      "options": {
+        "since": "2026-03-02T00:00:00Z",
+        "until": "2026-03-01T00:00:00Z"
+      },
+      "expect": {
+        "status": "unreconciled"
+      }
+    },
+    {
+      "id": "proof-beats-inference",
+      "note": "a bound effect claims its authorisation before an unbound one can",
+      "authorisations": [
+        {
+          "id": "a1",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        }
+      ],
+      "effects": [
+        {
+          "id": "e-unbound",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z"
+        },
+        {
+          "id": "e-bound",
+          "action": "act",
+          "subject": "sub",
+          "at": "2026-03-01T10:00:00Z",
+          "authorisation_id": "a1"
+        }
+      ],
+      "options": {
+        "match_window_s": 60
+      },
+      "expect": {
+        "binding_rate": 1.0,
+        "observed_not_authorised": 1
+      }
+    }
+  ]
+}
