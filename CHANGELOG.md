@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Repository laid out on the measure skeleton: `LICENSES/MIT.txt` + `NOTICE` + `REUSE.toml` replace the bare `LICENSE`; `MANIFEST.in` dropped; version single-sourced from `src/effect_reconciliation/_version.py`; CI workflow and release-please config added.
+
 ## 0.2.0 — 2026-08-17
 
 No behaviour change; a semantics clarification with a large consequence, found by consuming logs

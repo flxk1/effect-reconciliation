@@ -48,7 +48,7 @@ from datetime import datetime, timezone
 from enum import Enum
 from typing import Iterable, Sequence
 
-__version__ = "0.2.0"
+from ._version import __version__
 
 __all__ = [
     "Authorisation",

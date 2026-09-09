@@ -4,19 +4,27 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "effect-reconciliation"
-version = "0.2.0"
 description = "Reconcile permissions granted against effects observed — the missing second entry in governance's single-entry book."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
+license-files = ["LICENSES/*", "NOTICE"]
 authors = [{ name = "flxk1" }]
 dependencies = []
+dynamic = ["version"]
 
 [project.optional-dependencies]
 test = ["pytest>=7"]
+
+[tool.setuptools.dynamic]
+version = { attr = "effect_reconciliation._version.__version__" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 effect_reconciliation = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

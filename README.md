@@ -163,4 +163,4 @@ and *did the permission produce the effect* (effect-reconciliation).
 
 ## License
 
-MIT. See `LICENSE`. Copyright 2026 flxk1.
+MIT. See `LICENSES/MIT.txt`. Copyright 2026 flxk1.

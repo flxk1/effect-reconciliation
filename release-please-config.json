@@ -1,0 +1,11 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "packages": {
+    ".": {
+      "release-type": "python",
+      "package-name": "effect-reconciliation",
+      "changelog-path": "CHANGELOG.md",
+      "version-file": "src/effect_reconciliation/_version.py"
+    }
+  }
+}
