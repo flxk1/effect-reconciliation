@@ -2,6 +2,10 @@
 
 Reconciles an authorisation ledger against an effect ledger and reports three mismatches: permitted but unobserved, observed but unpermitted, duplicated.
 
+## Problem
+
+Permissions are logged; effects are logged; nobody joins them. Reports permitted-unobserved, observed-unpermitted, duplicated.
+
 ## Install
 
 `pip install "git+https://github.com/flxk1/effect-reconciliation"`
@@ -11,6 +15,16 @@ Reconciles an authorisation ledger against an effect ledger and reports three mi
 ```python
 r = reconcile(authorisations, effects, since="2026-03-01T00:00:00Z", until="2026-03-02T00:00:00Z")
 r.status.value, r.unauthorised_rate, r.binding_rate   # diverged 0.333 1.0
+```
+
+## Example
+
+```
+in : reconcile([Authorisation("a1", "fs.write", "/out/report.pdf", "2026-03-01T10:00:00Z")],
+               [Effect("e1", "fs.write", "/out/report.pdf", "2026-03-01T10:00:01Z", authorisation_id="a1"),
+                Effect("e2", "fs.write", "/out/other.pdf", "2026-03-01T10:00:02Z")],
+               since="2026-03-01T00:00:00Z", until="2026-03-02T00:00:00Z")
+out: r.status, [e.id for e in r.observed_not_authorised] → Status.DIVERGED ['e2']
 ```
 
 ## Interface
