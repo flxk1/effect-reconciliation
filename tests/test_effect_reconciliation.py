@@ -27,11 +27,11 @@ from effect_reconciliation import (  # noqa: E402
 SINCE, UNTIL = "2026-03-01T00:00:00Z", "2026-03-02T00:00:00Z"
 
 
-def auth(i="a1", action="git.push", subject="repo:rvnd", at="2026-03-01T10:00:00Z"):
+def auth(i="a1", action="git.push", subject="repo:example", at="2026-03-01T10:00:00Z"):
     return Authorisation(i, action, subject, at)
 
 
-def eff(i="e1", action="git.push", subject="repo:rvnd", at="2026-03-01T10:00:00Z", aid=None):
+def eff(i="e1", action="git.push", subject="repo:example", at="2026-03-01T10:00:00Z", aid=None):
     return Effect(i, action, subject, at, aid)
 
 

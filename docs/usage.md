@@ -25,12 +25,12 @@ Distributed from this repository; there is no package-index release. Tests:
 from effect_reconciliation import Authorisation, Effect, reconcile
 
 authorisations = [
-    Authorisation("a1", "git.push",  "repo:rvnd", "2026-03-01T10:00:00Z"),
+    Authorisation("a1", "git.push",  "repo:example", "2026-03-01T10:00:00Z"),
     Authorisation("a2", "mail.send", "ops@x",     "2026-03-01T11:00:00Z"),
 ]
 effects = [
-    Effect("e1", "git.push",  "repo:rvnd", "2026-03-01T10:00:01Z", authorisation_id="a1"),
-    Effect("e2", "git.push",  "repo:rvnd", "2026-03-01T10:00:09Z", authorisation_id="a1"),
+    Effect("e1", "git.push",  "repo:example", "2026-03-01T10:00:01Z", authorisation_id="a1"),
+    Effect("e2", "git.push",  "repo:example", "2026-03-01T10:00:09Z", authorisation_id="a1"),
     Effect("e3", "net.fetch", "evil.example", "2026-03-01T12:00:00Z"),
 ]
 
