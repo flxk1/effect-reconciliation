@@ -43,6 +43,10 @@ Assurance artifact, pillar "observed effects" of [governance-certification](http
 
 0.2.0 · 22 tests · 11 conformance vectors · Python ≥ 3.10
 
+## How this is made
+
+The code and documentation are written with Loomground agents. The maintainer reads and corrects all of it.
+
 ## License
 
 MIT — [LICENSES/MIT.txt](LICENSES/MIT.txt)
